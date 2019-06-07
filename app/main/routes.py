@@ -9,6 +9,7 @@ from app.main.forms import EditProfileForm, PostForm, SearchForm, MessageForm
 from app.models import User, Post, Message, Notification
 from app.translate import translate
 from app.main import bp
+from app.email import send_email
 
 
 @bp.before_app_request
@@ -167,6 +168,7 @@ def send_message(recipient):
         db.session.add(msg)
         user.add_notification('unread_message_count', user.new_messages())
         db.session.commit()
+        send_email('Test', 'noreply@mattmer.net', ['mgmershon@gmail.com'], 'Test email', '<h1>Test email</h1>')
         flash(_('Your message has been sent.'))
         return redirect(url_for('main.user', username=recipient))
     return render_template('send_message.html', title=_('Send Message'),
